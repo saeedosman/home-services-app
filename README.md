@@ -5,13 +5,10 @@ Home Service App
 
 Project Owners
 
-  Joe, Farrell
-  
-  Saeed, Osman
-  
-  Rohan, Sood
-  
-  Aaron, Teske
+	Joe, Farrell
+	Saeed, Osman
+	Rohan, Sood
+	Aaron, Teske
 
 
 Under Project/Deliverable Features
