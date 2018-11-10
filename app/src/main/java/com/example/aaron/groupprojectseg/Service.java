@@ -3,7 +3,7 @@ package com.example.aaron.groupprojectseg;
 public class Service {
     private String name;
     private double rate;
-    
+
     public Service() {
 
     }

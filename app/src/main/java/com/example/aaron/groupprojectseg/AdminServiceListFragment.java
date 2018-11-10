@@ -67,6 +67,11 @@ public class AdminServiceListFragment extends Fragment {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     if(dataSnapshot.exists()) {
+                                        System.out.println(dataSnapshot.toString());
+                                        for (DataSnapshot serviceSnapshot : dataSnapshot.getChildren()) {
+                                            Service service = serviceSnapshot.getValue(Service.class);
+                                            System.out.println("Selected service: " + service.getName());
+                                        }
                                     }
                                     else {
 
