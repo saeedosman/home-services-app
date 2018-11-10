@@ -32,5 +32,21 @@ public class ValidationHelperUnitTesting {
         assertNull("Testing valid password", validHelp.validatePassword("!Q@W#E$R"));
         assertNotNull("Testing Invalid password", validHelp.validatePassword("12"));
     }
-    
+
+    @Test
+    public void test_ValidateServiceName(){
+        ValidationHelper validHelp = new ValidationHelper();
+        assertNull("Testing valid service name",validHelp.validateServiceName("Flooring"));
+        assertNotNull("Testing an invalid service name", validHelp.validateServiceName("a"));
+
+    }
+
+    @Test
+    public void test_ValidateHourlyRate(){
+        ValidationHelper validHelp = new ValidationHelper();
+        assertNull("Testing valid hourly rate",validHelp.validateHourlyRate("123.123"));
+        assertNotNull("Testing negative hourly rate", validHelp.validateHourlyRate("-123.123"));
+        assertNotNull("Testing invalid hourly rate",validHelp.validateHourlyRate("a"));
+    }
+
 }

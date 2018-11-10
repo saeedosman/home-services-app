@@ -38,8 +38,8 @@ public class ValidationHelper {
         return null;
     }
 
-    public String ValidateServiceName(String s){
-        if(s.length()>=3) return "The service name needs to be more descriptive";
+    public String validateServiceName(String s){
+        if(s.length()<=3) return "The service name needs to be more descriptive";
         return null;
     }
 
