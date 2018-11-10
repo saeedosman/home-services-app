@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
 
         showToast("Logged in successfully");
 
-        Intent homeIntent = new Intent(this, HomeActivity.class);
+        Intent homeIntent = new Intent(this, AdminMainActivity.class);
         this.startActivity(homeIntent);
         finish();
     }

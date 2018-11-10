@@ -1,27 +1,31 @@
 package com.example.aaron.groupprojectseg;
 
 public class Service {
-    private String service;
-    private double hourlyRate;
+    private String name;
+    private double rate;
+    
+    public Service() {
 
-    public Service(String service, double rate){
-    this.service = service;
-    this.hourlyRate = rate;
     }
 
-    public String getService(){
-        return service;
+    public Service(String name, double rate){
+    this.name = name;
+    this.rate = rate;
     }
 
-    public void setService(String s){
-        this.service = s;
+    public String getName(){
+        return name;
     }
 
-    public double getHourlyRate(){
-        return hourlyRate;
+    public void setName(String s){
+        this.name = s;
     }
 
-    public void setHourlyRate(double r){
-        this.hourlyRate = r;
+    public double getRate(){
+        return rate;
+    }
+
+    public void setRate(double r){
+        this.rate = r;
     }
 }

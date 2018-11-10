@@ -17,7 +17,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".CreateAccountActivity" />
-        <activity android:name=".HomeActivity"></activity>
+        <activity android:name=".AdminUserListActivity" />
+        <activity android:name=".AdminMainActivity" android:theme="@style/AppNavTheme"/>
     </application>
 
 </manifest>
