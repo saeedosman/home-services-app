@@ -28,4 +28,19 @@ public class ValidationHelper {
         return null;
     }
 
+    public String validateHourlyRate(String s){
+        if(!s.matches("\\d+(\\.\\d+)?")){
+            return "Invalid Hourly Rate";
+        }
+        else if(s.matches("-\\d+(\\.\\d+)?")){
+            return "Hourly Rate cannot be negative";
+        }
+        return null;
+    }
+
+    public String ValidateServiceName(String s){
+        if(s.length()>=3) return "The service name needs to be more descriptive";
+        return null;
+    }
+
 }
