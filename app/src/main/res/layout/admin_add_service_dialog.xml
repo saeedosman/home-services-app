@@ -16,7 +16,7 @@
         android:id="@+id/rate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Rate"
+        android:hint="Rate ($/hour)"
         android:inputType="text" />
 
 </LinearLayout>

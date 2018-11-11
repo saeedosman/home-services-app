@@ -6,10 +6,6 @@
             android:icon="@drawable/ic_services_list"
             android:title="@string/services_list" />
         <item
-            android:id="@+id/nav_add_service"
-            android:icon="@drawable/ic_add_service"
-            android:title="@string/add_service" />
-        <item
             android:id="@+id/nav_users"
             android:icon="@drawable/ic_users"
             android:title="@string/users" />

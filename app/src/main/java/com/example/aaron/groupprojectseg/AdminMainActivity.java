@@ -86,9 +86,6 @@ public class AdminMainActivity extends AppCompatActivity {
             case R.id.nav_services_list:
                 fragmentClass = AdminServiceListFragment.class;
                 break;
-            case R.id.nav_add_service:
-                fragmentClass = AdminAddServiceFragment.class;
-                break;
             case R.id.nav_users:
                 fragmentClass = AdminUserListFragment.class;
                 break;

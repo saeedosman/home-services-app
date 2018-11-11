@@ -39,7 +39,10 @@ public class ValidationHelper {
     }
 
     public String validateServiceName(String s){
-        if(s.length()<=3) return "The service name needs to be more descriptive";
+        if (!s.matches("^[0-9A-Za-z\\s\\-]+$*")) return "Service name can only contain letters, numbers, hypens, and spaces";
+        if (s.charAt(0) == (' ')) return "Service name cannot begin with a space";
+        if(s.trim().length()<=3) return "The service name needs to be longer";
+        if(s.length()>20) return "The service name cannot be more than 20 characters.";
         return null;
     }
 

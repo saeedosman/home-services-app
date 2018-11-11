@@ -100,8 +100,10 @@ public class MainActivity extends AppCompatActivity {
 
         showToast("Logged in successfully");
 
-        Intent homeIntent = new Intent(this, AdminMainActivity.class);
-        this.startActivity(homeIntent);
+        Intent intent;
+        if (account.getType().equals("Admin")) intent = new Intent(this, AdminMainActivity.class);
+        else intent = new Intent(this, HomeActivity.class);
+        this.startActivity(intent);
         finish();
     }
 
