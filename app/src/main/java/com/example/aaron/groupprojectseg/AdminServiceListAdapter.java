@@ -3,7 +3,6 @@ package com.example.aaron.groupprojectseg;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +68,7 @@ public class AdminServiceListAdapter extends BaseAdapter implements ListAdapter 
         TextView listItemText = (TextView) view.findViewById(R.id.list_item_string);
         listItemText.setText(serviceText.get(position));
 
-        ImageView deleteBtn = (ImageView) view.findViewById(R.id.delete_btn);
+        ImageView deleteBtn = (ImageView) view.findViewById(R.id.deleteServiceButton);
         ImageView editBtn = (ImageView) view.findViewById(R.id.edit_btn);
 
         deleteBtn.setOnClickListener(new View.OnClickListener() {

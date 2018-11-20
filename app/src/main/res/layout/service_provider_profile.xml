@@ -76,7 +76,6 @@
                     android:layout_marginLeft="5dp"
                     android:layout_weight="1"
                     android:text="Licensed?"
-                    android:textColor="@drawable/service_provider_text"
                     android:textSize="18sp" />
 
                 <Spinner
@@ -85,8 +84,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:enabled="false"
-                    android:spinnerMode="dropdown"
-                    android:textColor="@drawable/service_provider_text" />
+                    android:spinnerMode="dropdown" />
 
             </LinearLayout>
 
@@ -99,27 +97,14 @@
                 android:text="Services"
                 android:textSize="14sp" />
 
-            <ScrollView
+
+            <LinearLayout
+                android:id="@+id/serviceLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:id="@+id/serviceLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <Spinner
-                        android:id="@+id/serviceSpinner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:enabled="false"
-                        android:spinnerMode="dropdown"
-                        android:textColor="@drawable/service_provider_text" />
-
-                </LinearLayout>
-            </ScrollView>
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/add"

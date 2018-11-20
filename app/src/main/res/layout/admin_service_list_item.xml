@@ -13,7 +13,7 @@
         android:layout_marginTop="10dp">
 
         <ImageView
-            android:id="@+id/delete_btn"
+            android:id="@+id/deleteServiceButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:layout_toLeftOf="@id/delete_btn"
+            android:layout_toLeftOf="@id/deleteServiceButton"
             android:clickable="true"
             app:srcCompat="@drawable/ic_edit" />
 

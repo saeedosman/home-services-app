@@ -2,6 +2,7 @@ package com.example.aaron.groupprojectseg;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,8 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +32,7 @@ import java.util.Locale;
 public class ServiceProviderProfileFragment extends Fragment {
 
     ArrayList<Service> services;
+    ArrayList<String> profileServices;
 
     EditText nameBox;
     EditText phoneNumberBox;
@@ -35,13 +40,15 @@ public class ServiceProviderProfileFragment extends Fragment {
     EditText descriptionBox;
     Spinner licenseDropdown;
     String username;
-    Spinner serviceDropdown;
     LinearLayout serviceLayout;
-    TextView addView;
+    TextView addServiceView;
+    ImageView deleteServiceButton;
 
-    Button button;
+    Button editSaveButton;
 
     boolean editState;
+
+    int loadServiceCount;
 
     DatabaseReference database = FirebaseDatabase.getInstance().getReference();
 
@@ -53,68 +60,38 @@ public class ServiceProviderProfileFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(final View view, Bundle savedInstanceState) {
         licenseDropdown = view.findViewById(R.id.licenseSpinner);
         String[] items = new String[]{"Yes", "No"};
-        ArrayAdapter<String> licenseAdapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_spinner_dropdown_item, items);
+        ArrayAdapter<String> licenseAdapter = new ArrayAdapter<>(view.getContext(), R.layout.service_provider_spinner_item, items);
         licenseDropdown.setAdapter(licenseAdapter);
-
-        serviceDropdown = view.findViewById(R.id.serviceSpinner);
-        addServicesToDropdown(view, serviceDropdown);
 
         nameBox = view.findViewById(R.id.companyName);
         phoneNumberBox = view.findViewById(R.id.phoneNumber);
         addressBox = view.findViewById(R.id.address);
         descriptionBox = view.findViewById(R.id.description);
-        button = view.findViewById(R.id.profileButton);
+        editSaveButton = view.findViewById(R.id.profileButton);
         serviceLayout = view.findViewById(R.id.serviceLayout);
-        addView = view.findViewById(R.id.add);
+        addServiceView = view.findViewById(R.id.add);
 
+        loadServiceCount = 0;
 
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         username = sharedPref.getString("username",null);
 
+        loadProfile(view);
 
-        database.child("service_providers").orderByChild("username").equalTo(username).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    editState = false;
-                    enableEditing(false);
-                    for (DataSnapshot serviceProviderSnapshot : dataSnapshot.getChildren()) {
-                        ServiceProvider serviceProvider = serviceProviderSnapshot.getValue(ServiceProvider.class);
-                        System.out.println("Selected provider: " + serviceProvider.getName());
-
-                        nameBox.setText(serviceProvider.getName());
-                        addressBox.setText(serviceProvider.getAddress());
-                        phoneNumberBox.setText(serviceProvider.getPhoneNumber());
-                        descriptionBox.setText(serviceProvider.getDescription());
-                    }
-                }
-                else {
-                    editState = true;
-                    enableEditing(true);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-
-        addView.setOnClickListener(new View.OnClickListener() {
+        addServiceView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (editState) {
-                    Spinner spinner = new Spinner(getActivity());
-                    addServicesToDropdown(v, spinner);
-                    serviceLayout.addView(spinner);
+                    createServiceItem(v);
                 }
             }
         });
 
 
-        button.setOnClickListener(new View.OnClickListener() {
+        editSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (editState) {
@@ -128,15 +105,121 @@ public class ServiceProviderProfileFragment extends Fragment {
         });
     }
 
+    public void createServiceItem(View v) {
+        LinearLayout serviceItem = new LinearLayout(v.getContext());
+        serviceItem.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        serviceItem.setOrientation(LinearLayout.HORIZONTAL);
+
+        Spinner spinner = new Spinner(v.getContext());
+        spinner.setEnabled(editState);
+        serviceItem.addView(spinner);
+
+        final ImageView deleteButton = new ImageView(v.getContext());
+        deleteButton.setImageResource(R.drawable.ic_delete);
+        deleteButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT));
+        deleteButton.setClickable(true);
+        deleteButton.setFocusable(true);
+        deleteButton.setEnabled(editState);
+        serviceItem.addView(deleteButton);
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (editState) {
+                    LinearLayout spinnerParent = (LinearLayout) deleteButton.getParent();
+                    ((LinearLayout) spinnerParent.getParent()).removeView(spinnerParent);
+                }
+            }
+        });
+
+
+        serviceLayout.addView(serviceItem);
+        addServicesToDropdown(v, spinner);
+
+    }
+
+//    public void getServices(final View view) {
+//        services = new ArrayList<>();
+//        database.child("services").addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//
+//                for (DataSnapshot serviceSnapshot: dataSnapshot.getChildren()) {
+//                    Service service = serviceSnapshot.getValue(Service.class);
+//                    services.add(service);
+//                }
+//
+//                loadProfile(view);
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
+
+    public void loadProfile(final View view) {
+        database.child("service_providers").orderByChild("username").equalTo(username).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    editState = false;
+                    enableEditing(false);
+
+                    for (DataSnapshot serviceProviderSnapshot : dataSnapshot.getChildren()) {
+                        ServiceProvider serviceProvider = serviceProviderSnapshot.getValue(ServiceProvider.class);
+                        System.out.println("Selected provider: " + serviceProvider.getName());
+
+                        nameBox.setText(serviceProvider.getName());
+                        addressBox.setText(serviceProvider.getAddress());
+                        phoneNumberBox.setText(serviceProvider.getPhoneNumber());
+                        descriptionBox.setText(serviceProvider.getDescription());
+
+                        profileServices = serviceProvider.getServices();
+
+                        for (int i=0; i<profileServices.size();i++) {
+                            createServiceItem(view);
+//                            for (int j=0; j<services.size();j++) {
+//                                String name = services.get(j).getName();
+//                                String rate = "$" + String.format(Locale.getDefault(), "%.2f", services.get(j).getRate()) + "/hour";
+//                                String serviceText = name + " - " + rate;
+//
+//                                System.out.println("COMPARING: " + profileServices.get(i) + " WITH: " + serviceText);
+//
+//                                if (profileServices.get(i).equals(serviceText)) {
+//                                    System.out.println("MATCH");
+//                                    System.out.println("Selecting: " + dropdown.getItemAtPosition(j).toString());
+//                                    dropdown.setSelection(j);
+//                                }
+//                            }
+                        }
+                    }
+                }
+                else {
+                    editState = true;
+                    enableEditing(true);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
     public void addServicesToDropdown(final View view, final Spinner dropdown) {
-        services = new ArrayList<>();
+        if (services == null) services = new ArrayList<>();
         database.child("services").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                for (DataSnapshot serviceSnapshot: dataSnapshot.getChildren()) {
-                    Service service = serviceSnapshot.getValue(Service.class);
-                    services.add(service);
+                if (services.size() == 0) {
+                    for (DataSnapshot serviceSnapshot : dataSnapshot.getChildren()) {
+                        Service service = serviceSnapshot.getValue(Service.class);
+                        services.add(service);
+                    }
                 }
 
                 ArrayList<String> serviceText = new ArrayList<>();
@@ -145,8 +228,26 @@ public class ServiceProviderProfileFragment extends Fragment {
                     String rate = "$" + String.format(Locale.getDefault(), "%.2f", service.getRate()) + "/hour";
                     serviceText.add(name + " - " + rate);
                 }
-                ArrayAdapter<String> serviceAdapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_spinner_dropdown_item, serviceText);
+                ArrayAdapter<String> serviceAdapter = new ArrayAdapter<>(view.getContext(), R.layout.service_provider_spinner_item, serviceText);
                 dropdown.setAdapter(serviceAdapter);
+
+                if (loadServiceCount < profileServices.size()) {
+                    for (int j=0; j<services.size();j++) {
+                        String name = services.get(j).getName();
+                        String rate = "$" + String.format(Locale.getDefault(), "%.2f", services.get(j).getRate()) + "/hour";
+                        String serviceStr = name + " - " + rate;
+
+                        System.out.println("COMPARING: " + profileServices.get(loadServiceCount) + " WITH: " + serviceText);
+
+                        if (profileServices.get(loadServiceCount).equals(serviceStr)) {
+                            System.out.println("MATCH");
+                            System.out.println("Selecting: " + dropdown.getItemAtPosition(j).toString());
+                            dropdown.setSelection(j, true);
+                        }
+                    }
+                    loadServiceCount++;
+                }
+
 
             }
 
@@ -169,7 +270,7 @@ public class ServiceProviderProfileFragment extends Fragment {
         HashSet<String> serviceVisited = new HashSet<>();
         for (int i = 0; i < childCount; i++) {
             View v = serviceLayout.getChildAt(i);
-            String serviceText = ((Spinner)v).getSelectedItem().toString();
+            String serviceText = ((Spinner)((LinearLayout)v).getChildAt(0)).getSelectedItem().toString();
             if (!serviceVisited.contains(serviceText)) {
                 selectedServices.add(serviceText);
                 serviceVisited.add(serviceText);
@@ -231,12 +332,21 @@ public class ServiceProviderProfileFragment extends Fragment {
         descriptionBox.setEnabled(enable);
         licenseDropdown.setEnabled(enable);
         for (int i = 0; i < serviceLayout.getChildCount(); i++) {
-            View v = serviceLayout.getChildAt(i);
+            View v = ((LinearLayout) serviceLayout.getChildAt(i)).getChildAt(0);
+            v.setEnabled(enable);
+            v = ((LinearLayout) serviceLayout.getChildAt(i)).getChildAt(1);
             v.setEnabled(enable);
         }
-        addView.setEnabled(enable);
-        if (enable) button.setText("Save");
-        else button.setText("Edit");
+        addServiceView.setEnabled(enable);
+
+        if (enable) {
+            addServiceView.setVisibility(View.VISIBLE);
+            editSaveButton.setText("Save");
+        }
+        else {
+            addServiceView.setVisibility(View.GONE);
+            editSaveButton.setText("Edit");
+        }
 
     }
 
