@@ -66,18 +66,15 @@ public class AdminServiceListAdapter extends BaseAdapter implements ListAdapter 
             serviceText.add(name + " - " + rate);
         }
 
-        //Handle TextView and display string from your services
         TextView listItemText = (TextView) view.findViewById(R.id.list_item_string);
         listItemText.setText(serviceText.get(position));
 
-        //Handle buttons and add onClickListeners
         ImageView deleteBtn = (ImageView) view.findViewById(R.id.delete_btn);
         ImageView editBtn = (ImageView) view.findViewById(R.id.edit_btn);
 
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //do something
                 deleteService(v);
 
             }

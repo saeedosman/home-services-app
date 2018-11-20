@@ -1,28 +1,28 @@
 package com.example.aaron.groupprojectseg;
 
 import android.content.res.Configuration;
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-public class AdminMainActivity extends AppCompatActivity {
+public class ServiceProviderMainActivity extends AppCompatActivity {
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
     public NavigationView nvDrawer;
-
+    
     private ActionBarDrawerToggle drawerToggle;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin_main);
+        setContentView(R.layout.activity_service_provider_main);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -71,14 +71,11 @@ public class AdminMainActivity extends AppCompatActivity {
         Fragment fragment = null;
         Class fragmentClass;
         switch(menuItem.getItemId()) {
-            case R.id.nav_services_list:
-                fragmentClass = AdminServiceListFragment.class;
-                break;
-            case R.id.nav_users:
-                fragmentClass = AdminUserListFragment.class;
+            case R.id.nav_profile:
+                fragmentClass = ServiceProviderProfileFragment.class;
                 break;
             default:
-                fragmentClass = AdminServiceListFragment.class;
+                fragmentClass = ServiceProviderProfileFragment.class;
         }
 
         try {

@@ -19,6 +19,7 @@
         <activity android:name=".CreateAccountActivity" />
         <activity android:name=".HomeActivity" />
         <activity android:name=".AdminMainActivity" android:theme="@style/AppNavTheme"/>
+        <activity android:name=".ServiceProviderMainActivity" android:theme="@style/AppNavTheme"/>
     </application>
 
 </manifest>

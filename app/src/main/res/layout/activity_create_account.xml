@@ -71,11 +71,11 @@
                 android:text="Home Owner" />
 
             <RadioButton
-                android:id="@+id/ContractorButton"
+                android:id="@+id/ServiceProviderButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Contractor" />
+                android:text="Service Provider" />
 
             <RadioButton
                 android:id="@+id/AdminButton"
