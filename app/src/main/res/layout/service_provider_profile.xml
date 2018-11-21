@@ -61,7 +61,7 @@
                 android:ems="10"
                 android:enabled="false"
                 android:hint="Description"
-                android:inputType="textMultiLine|textPassword"
+                android:inputType="textMultiLine"
                 android:textColor="@drawable/service_provider_text" />
 
             <LinearLayout

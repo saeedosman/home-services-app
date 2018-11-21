@@ -64,7 +64,7 @@ public class ServiceProviderProfileFragment extends Fragment {
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         licenseDropdown = view.findViewById(R.id.licenseSpinner);
-        String[] items = new String[]{"Yes", "No"};
+        String[] items = new String[]{"Yes", "No", "N/A"};
         ArrayAdapter<String> licenseAdapter = new ArrayAdapter<>(view.getContext(), R.layout.service_provider_spinner_item, items);
         licenseDropdown.setAdapter(licenseAdapter);
 
@@ -79,6 +79,8 @@ public class ServiceProviderProfileFragment extends Fragment {
         availabilityLayout = view.findViewById(R.id.timeTable);
         addAvailabilityView = view.findViewById(R.id.add2);
 
+        availableTimes = new ArrayList<>();
+        profileServices = new ArrayList<>();
         loadServiceCount = 0;
 
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -179,21 +181,17 @@ public class ServiceProviderProfileFragment extends Fragment {
                 String day = dayDropdown.getSelectedItem().toString();
                 String start = startDropdown.getSelectedItem().toString();
                 String end = endDropdown.getSelectedItem().toString();
-//
-//                ValidationHelper validationHelper = new ValidationHelper();
-//
-//                String nameValidation = validationHelper.validateServiceName(name);
-//                String rateValidation = validationHelper.validateHourlyRate(rate);
-//
-//                if (nameValidation != null) {
-//                    showToast(nameValidation);
-//                    return;
-//                }
-//
-//                if (rateValidation != null) {
-//                    showToast(rateValidation);
-//                    return;
-//                }
+
+                ValidationHelper validationHelper = new ValidationHelper();
+
+                String timeValidation = validationHelper.validateTimeChronology(start, end);
+
+                if (timeValidation != null) {
+                    showToast(timeValidation);
+                    return;
+                }
+
+                showToast("Added time slot");
 
                 final AvailableTime availableTime = new AvailableTime(day, start, end);
                 availableTimes.add(availableTime);
@@ -237,18 +235,12 @@ public class ServiceProviderProfileFragment extends Fragment {
                         profileServices = serviceProvider.getServices();
                         availableTimes = serviceProvider.getAvailableTimes();
 
-                        if (profileServices != null) {
-                            for (int i = 0; i < profileServices.size(); i++) {
-                                createServiceItem(view);
-                            }
+                        for (int i = 0; i < profileServices.size(); i++) {
+                            createServiceItem(view);
                         }
-                        else profileServices = new ArrayList<>();
-                        if (availableTimes != null) {
-                            for (int i = 0; i < availableTimes.size(); i++) {
-                                createAvailableTimeItem(view, availableTimes.get(i));
-                            }
+                        for (int i = 0; i < availableTimes.size(); i++) {
+                            createAvailableTimeItem(view, availableTimes.get(i));
                         }
-                        else availableTimes = new ArrayList<>();
                     }
                 } else {
                     editState = true;
@@ -317,6 +309,26 @@ public class ServiceProviderProfileFragment extends Fragment {
         String phoneNumber = phoneNumberBox.getText().toString();
         String description = descriptionBox.getText().toString();
         boolean licensed = licenseDropdown.getSelectedItem().toString().equals("Yes");
+
+
+        ValidationHelper validationHelper = new ValidationHelper();
+
+        String addressValidation = validationHelper.validateAddress(address);
+        String phoneNumberValidation = validationHelper.validatePhoneNumber(phoneNumber);
+        String companyNameValidation = validationHelper.validateCompanyName(name);
+
+        if (addressValidation != null) {
+            showToast(addressValidation);
+            return;
+        }
+        if (phoneNumberValidation != null) {
+            showToast(phoneNumberValidation);
+            return;
+        }
+        if (companyNameValidation != null) {
+            showToast(companyNameValidation);
+            return;
+        }
 
         ArrayList<String> selectedServices = new ArrayList<>();
         final int childCount = serviceLayout.getChildCount();

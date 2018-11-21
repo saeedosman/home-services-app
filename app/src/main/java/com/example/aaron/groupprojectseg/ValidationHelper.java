@@ -46,4 +46,29 @@ public class ValidationHelper {
         return null;
     }
 
+    public String validateTimeChronology(String start, String end) {
+        int x = Integer.parseInt(start.split(":")[0]);
+        int y = Integer.parseInt(end.split(":")[0]);
+        if (x > y) return "The start time must come before the end time";
+        if (x == y) return "There must be some time between the times";
+        return null;
+    }
+
+    public String validateAddress(String s) {
+        if (!s.matches("^\\s*\\S+(?:\\s+\\S+){2}")) return "Invalid address";
+        return null;
+    }
+
+    public String validatePhoneNumber(String s) {
+        if (!s.matches("\\(?([0-9]{3})\\)?([ .-]?)([0-9]{3})\\2([0-9]{4})")) return "Invalid phone number";
+        return null;
+    }
+
+    public String validateCompanyName(String s) {
+        if (!s.matches("^[0-9A-Za-z\\s\\-]+$*")) return "Company name can only contain letters, numbers, hypens, and spaces";
+        if(s.trim().length()==0) return "The company name can't be empty";
+        if (s.charAt(0) == (' ')) return "Service name cannot begin with a space";
+        return null;
+    }
+
 }
