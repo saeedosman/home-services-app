@@ -1,8 +1,10 @@
 package com.example.aaron.groupprojectseg;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,9 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +33,7 @@ public class ServiceProviderProfileFragment extends Fragment {
 
     ArrayList<Service> services;
     ArrayList<String> profileServices;
+    ArrayList<AvailableTime> availableTimes;
 
     EditText nameBox;
     EditText phoneNumberBox;
@@ -43,11 +44,12 @@ public class ServiceProviderProfileFragment extends Fragment {
     LinearLayout serviceLayout;
     TextView addServiceView;
     ImageView deleteServiceButton;
-
     Button editSaveButton;
 
-    boolean editState;
+    LinearLayout availabilityLayout;
+    TextView addAvailabilityView;
 
+    boolean editState;
     int loadServiceCount;
 
     DatabaseReference database = FirebaseDatabase.getInstance().getReference();
@@ -74,10 +76,13 @@ public class ServiceProviderProfileFragment extends Fragment {
         serviceLayout = view.findViewById(R.id.serviceLayout);
         addServiceView = view.findViewById(R.id.add);
 
+        availabilityLayout = view.findViewById(R.id.timeTable);
+        addAvailabilityView = view.findViewById(R.id.add2);
+
         loadServiceCount = 0;
 
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        username = sharedPref.getString("username",null);
+        username = sharedPref.getString("username", null);
 
         loadProfile(view);
 
@@ -96,10 +101,18 @@ public class ServiceProviderProfileFragment extends Fragment {
             public void onClick(View view) {
                 if (editState) {
                     saveProfile();
-                }
-                else {
+                } else {
                     enableEditing(true);
                     editState = true;
+                }
+            }
+        });
+
+        addAvailabilityView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (editState) {
+                    addAvailability(v);
                 }
             }
         });
@@ -136,29 +149,74 @@ public class ServiceProviderProfileFragment extends Fragment {
         serviceLayout.addView(serviceItem);
         addServicesToDropdown(v, spinner);
 
+
     }
 
-//    public void getServices(final View view) {
-//        services = new ArrayList<>();
-//        database.child("services").addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
+    public void addAvailability(final View v) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(v.getContext());
+        LayoutInflater inflater = (LayoutInflater) v.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View dialogView = inflater.inflate(R.layout.add_availability_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        final Spinner dayDropdown = dialogView.findViewById(R.id.daySpinner);
+        String[] days = new String[]{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+        ArrayAdapter<String> daysAdapter = new ArrayAdapter<>(v.getContext(), R.layout.service_provider_spinner_item, days);
+        dayDropdown.setAdapter(daysAdapter);
+
+        String[] hours = new String[]{"0:00", "1:00", "2:00", "3:00", "4:00", "5:00", "6:00", "7:00", "8:00", "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"};
+
+        final Spinner startDropdown = dialogView.findViewById(R.id.startSpinner);
+        ArrayAdapter<String> timeAdapter = new ArrayAdapter<>(v.getContext(), R.layout.service_provider_spinner_item, hours);
+        startDropdown.setAdapter(timeAdapter);
+
+        final Spinner endDropdown = dialogView.findViewById(R.id.endSpinner);
+        endDropdown.setAdapter(timeAdapter);
+
+        dialogBuilder.setTitle("Add Timeslot");
+//        dialogBuilder.setMessage("");
+        dialogBuilder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String day = dayDropdown.getSelectedItem().toString();
+                String start = startDropdown.getSelectedItem().toString();
+                String end = endDropdown.getSelectedItem().toString();
 //
-//                for (DataSnapshot serviceSnapshot: dataSnapshot.getChildren()) {
-//                    Service service = serviceSnapshot.getValue(Service.class);
-//                    services.add(service);
+//                ValidationHelper validationHelper = new ValidationHelper();
+//
+//                String nameValidation = validationHelper.validateServiceName(name);
+//                String rateValidation = validationHelper.validateHourlyRate(rate);
+//
+//                if (nameValidation != null) {
+//                    showToast(nameValidation);
+//                    return;
 //                }
 //
-//                loadProfile(view);
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-//    }
+//                if (rateValidation != null) {
+//                    showToast(rateValidation);
+//                    return;
+//                }
+
+                final AvailableTime availableTime = new AvailableTime(day, start, end);
+                availableTimes.add(availableTime);
+                createAvailableTimeItem(v, availableTime);
+
+            }
+        });
+        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //pass
+            }
+        });
+        AlertDialog b = dialogBuilder.create();
+        b.show();
+    }
+
+    public void createAvailableTimeItem(final View view, AvailableTime availableTime) {
+        TextView dayView = new TextView(view.getContext());
+        dayView.setText(availableTime.getDay() + ": " + availableTime.getStartTime() + " - " + availableTime.getEndTime());
+        dayView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        availabilityLayout.addView(dayView);
+    }
 
     public void loadProfile(final View view) {
         database.child("service_providers").orderByChild("username").equalTo(username).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -176,28 +234,23 @@ public class ServiceProviderProfileFragment extends Fragment {
                         addressBox.setText(serviceProvider.getAddress());
                         phoneNumberBox.setText(serviceProvider.getPhoneNumber());
                         descriptionBox.setText(serviceProvider.getDescription());
-
                         profileServices = serviceProvider.getServices();
+                        availableTimes = serviceProvider.getAvailableTimes();
 
-                        for (int i=0; i<profileServices.size();i++) {
-                            createServiceItem(view);
-//                            for (int j=0; j<services.size();j++) {
-//                                String name = services.get(j).getName();
-//                                String rate = "$" + String.format(Locale.getDefault(), "%.2f", services.get(j).getRate()) + "/hour";
-//                                String serviceText = name + " - " + rate;
-//
-//                                System.out.println("COMPARING: " + profileServices.get(i) + " WITH: " + serviceText);
-//
-//                                if (profileServices.get(i).equals(serviceText)) {
-//                                    System.out.println("MATCH");
-//                                    System.out.println("Selecting: " + dropdown.getItemAtPosition(j).toString());
-//                                    dropdown.setSelection(j);
-//                                }
-//                            }
+                        if (profileServices != null) {
+                            for (int i = 0; i < profileServices.size(); i++) {
+                                createServiceItem(view);
+                            }
                         }
+                        else profileServices = new ArrayList<>();
+                        if (availableTimes != null) {
+                            for (int i = 0; i < availableTimes.size(); i++) {
+                                createAvailableTimeItem(view, availableTimes.get(i));
+                            }
+                        }
+                        else availableTimes = new ArrayList<>();
                     }
-                }
-                else {
+                } else {
                     editState = true;
                     enableEditing(true);
                 }
@@ -232,7 +285,7 @@ public class ServiceProviderProfileFragment extends Fragment {
                 dropdown.setAdapter(serviceAdapter);
 
                 if (loadServiceCount < profileServices.size()) {
-                    for (int j=0; j<services.size();j++) {
+                    for (int j = 0; j < services.size(); j++) {
                         String name = services.get(j).getName();
                         String rate = "$" + String.format(Locale.getDefault(), "%.2f", services.get(j).getRate()) + "/hour";
                         String serviceStr = name + " - " + rate;
@@ -270,23 +323,22 @@ public class ServiceProviderProfileFragment extends Fragment {
         HashSet<String> serviceVisited = new HashSet<>();
         for (int i = 0; i < childCount; i++) {
             View v = serviceLayout.getChildAt(i);
-            String serviceText = ((Spinner)((LinearLayout)v).getChildAt(0)).getSelectedItem().toString();
+            String serviceText = ((Spinner) ((LinearLayout) v).getChildAt(0)).getSelectedItem().toString();
             if (!serviceVisited.contains(serviceText)) {
                 selectedServices.add(serviceText);
                 serviceVisited.add(serviceText);
-            }
-            else {
+            } else {
                 showToast("You can't add the same service twice.");
                 return;
             }
         }
 
-        final ServiceProvider serviceProvider = new ServiceProvider(address, phoneNumber, name, description, licensed, username, selectedServices);
+        final ServiceProvider serviceProvider = new ServiceProvider(address, phoneNumber, name, description, licensed, username, selectedServices, availableTimes);
 
         database.child("service_providers").orderByChild("username").equalTo(serviceProvider.getUsername()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
+                if (dataSnapshot.exists()) {
                     for (final DataSnapshot serviceProviderSnapshot : dataSnapshot.getChildren()) {
                         serviceProviderSnapshot.getRef().setValue(serviceProvider, new DatabaseReference.CompletionListener() {
                             public void onComplete(DatabaseError error, DatabaseReference ref) {
@@ -301,8 +353,7 @@ public class ServiceProviderProfileFragment extends Fragment {
                             }
                         });
                     }
-                }
-                else {
+                } else {
                     database.child("service_providers").push().setValue(serviceProvider, new DatabaseReference.CompletionListener() {
                         public void onComplete(DatabaseError error, DatabaseReference ref) {
                             System.out.println("Value was set. Error = " + error);
@@ -331,6 +382,7 @@ public class ServiceProviderProfileFragment extends Fragment {
         addressBox.setEnabled(enable);
         descriptionBox.setEnabled(enable);
         licenseDropdown.setEnabled(enable);
+
         for (int i = 0; i < serviceLayout.getChildCount(); i++) {
             View v = ((LinearLayout) serviceLayout.getChildAt(i)).getChildAt(0);
             v.setEnabled(enable);
@@ -338,12 +390,14 @@ public class ServiceProviderProfileFragment extends Fragment {
             v.setEnabled(enable);
         }
         addServiceView.setEnabled(enable);
+        addAvailabilityView.setEnabled(enable);
 
         if (enable) {
+            addAvailabilityView.setVisibility(View.VISIBLE);
             addServiceView.setVisibility(View.VISIBLE);
             editSaveButton.setText("Save");
-        }
-        else {
+        } else {
+            addAvailabilityView.setVisibility(View.GONE);
             addServiceView.setVisibility(View.GONE);
             editSaveButton.setText("Edit");
         }
@@ -355,8 +409,6 @@ public class ServiceProviderProfileFragment extends Fragment {
         Toast toast = Toast.makeText(getActivity(), message, duration);
         toast.show();
     }
-
-
 
 
 }

@@ -10,11 +10,12 @@ public class ServiceProvider {
     private boolean licensed;
     private String username;
     private ArrayList<String> services;
+    private ArrayList<AvailableTime> availableTimes;
 
     public ServiceProvider() {
     }
 
-    public ServiceProvider(String address, String phoneNumber, String name, String description, boolean licensed, String username, ArrayList<String> services) {
+    public ServiceProvider(String address, String phoneNumber, String name, String description, boolean licensed, String username, ArrayList<String> services, ArrayList<AvailableTime> availableTimes) {
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.name = name;
@@ -22,6 +23,7 @@ public class ServiceProvider {
         this.licensed = licensed;
         this.username = username;
         this.services = services;
+        this.availableTimes = availableTimes;
     }
 
     public String getAddress() {
@@ -78,5 +80,13 @@ public class ServiceProvider {
 
     public void setServices(ArrayList<String> services) {
         this.services = services;
+    }
+
+    public ArrayList<AvailableTime> getAvailableTimes() {
+        return availableTimes;
+    }
+
+    public void setAvailableTimes(ArrayList<AvailableTime> availableTimes) {
+        this.availableTimes = availableTimes;
     }
 }
