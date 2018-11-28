@@ -16,12 +16,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.security.NoSuchAlgorithmException;
+
 public class MainActivity extends AppCompatActivity {
 
     DatabaseReference database = FirebaseDatabase.getInstance().getReference();
     private EditText usernameBox;
     private EditText passwordBox;
-
+    private String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,16 @@ public class MainActivity extends AppCompatActivity {
             showToast("Password field is empty");
             return;
         }
+        //after the password has been shown not to be empty
+        //has it so it can be verified against the hashed password save on the database
+        //password encryption after it has been validated
+        SHAHashing stringHash = new SHAHashing();
+
+        try {
+            password = stringHash.hashPassword(passwordBox.getText().toString());
+        } catch(NoSuchAlgorithmException e){
+            System.out.println(e);
+        }
 
         database.child("accounts").orderByChild("username").equalTo(usernameBox.getText().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -61,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                         Account account = accountSnapshot.getValue(Account.class);
                         System.out.println(account.getUsername());
                         System.out.println(account.getPassword());
-                        if (account.getPassword().equals(passwordBox.getText().toString())) {
+                        if (account.getPassword().equals(password)) {
                             successfulLogin(account);
                         }
                         else {

@@ -16,6 +16,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
 public class CreateAccountActivity extends AppCompatActivity {
@@ -74,6 +75,14 @@ public class CreateAccountActivity extends AppCompatActivity {
         String emailValidation = validationHelper.validateEmail(email);
         String usernameValidation = validationHelper.validateUsername(username);
         String passwordValidation = validationHelper.validatePassword(password);
+
+        //password encryption after it has been validated
+        SHAHashing stringHash = new SHAHashing();
+        try {
+            password = stringHash.hashPassword(password);
+        } catch(NoSuchAlgorithmException e){
+            System.out.println(e);
+        }
 
         if (firstNameValidation != null) {
             showToast(firstNameValidation);
