@@ -1,3 +1,8 @@
+#Starts Here
+Build Status
+[![Build Status](https://circleci.com/gh/AaronTeske/GroupProjectSEG.png?branch=master)](https://circleci.com/gh/AaronTeske/GroupProjectSEG)
+#Ends Here
+
 # GroupProjectSEG
 This is the git repo for the group project
 
