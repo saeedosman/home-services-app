@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (account.getType().equals("Admin")) intent = new Intent(this, AdminMainActivity.class);
         else if (account.getType().equals("Service Provider")) intent = new Intent(this, ServiceProviderMainActivity.class);
-        else intent = new Intent(this, HomeActivity.class);
+        else intent = new Intent(this, HomeOwnerMainActivity.class);
 
         this.startActivity(intent);
         finish();
