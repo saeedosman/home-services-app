@@ -74,8 +74,11 @@ public class ServiceProviderMainActivity extends AppCompatActivity {
             case R.id.nav_profile:
                 fragmentClass = ServiceProviderProfileFragment.class;
                 break;
+            case R.id.nav_home:
+                fragmentClass = HomeFragment.class;
+                break;
             default:
-                fragmentClass = ServiceProviderProfileFragment.class;
+                fragmentClass = HomeFragment.class;
         }
 
         try {

@@ -71,6 +71,9 @@ public class AdminMainActivity extends AppCompatActivity {
         Fragment fragment = null;
         Class fragmentClass;
         switch(menuItem.getItemId()) {
+            case R.id.nav_home:
+                fragmentClass = HomeFragment.class;
+                break;
             case R.id.nav_services_list:
                 fragmentClass = AdminServiceListFragment.class;
                 break;
@@ -78,7 +81,7 @@ public class AdminMainActivity extends AppCompatActivity {
                 fragmentClass = AdminUserListFragment.class;
                 break;
             default:
-                fragmentClass = AdminServiceListFragment.class;
+                fragmentClass = HomeFragment.class;
         }
 
         try {
