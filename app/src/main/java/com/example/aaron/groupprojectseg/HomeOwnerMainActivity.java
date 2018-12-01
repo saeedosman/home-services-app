@@ -74,6 +74,9 @@ public class HomeOwnerMainActivity extends AppCompatActivity {
             case R.id.nav_home:
                 fragmentClass = HomeFragment.class;
                 break;
+            case R.id.nav_search:
+                fragmentClass = HomeOwnerSearchFragment.class;
+                break;
             default:
                 fragmentClass = HomeFragment.class;
         }
