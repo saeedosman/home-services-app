@@ -10,14 +10,8 @@ public class RateService {
 	}
 
 	public RateService(int rating, String comment){
-		this.comment = comment; 
-
-		if (rating>=1 && rating<=5){
-			this.rating = rating;
-		}
-		else{
-			this.rating = null; 
-		}
+		this.comment = comment;
+		this.rating = rating;
 
 	}
 
@@ -26,12 +20,7 @@ public class RateService {
 	}
 
 	public void setRating(int n){
-		if (n>=1 && n<=5){
-			this.rating = n;
-		}
-		else{
-			this.rating = null; 
-		}
+		this.rating = n;
 	}
 
 	public String getComment(){
