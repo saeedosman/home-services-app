@@ -1,35 +1,51 @@
 package com.example.aaron.groupprojectseg;
 
 public class Rating {
-
-	private String comment;
-	private int rating;
+	private ServiceProvider serviceProvider;
+	private String username;
+    private float rating;
+    private String comment;
 
 	public Rating() {
 
 	}
 
-	public Rating(int rating, String comment){
-		this.comment = comment;
-		this.rating = rating;
+    public Rating(ServiceProvider serviceProvider, String username, float rating, String comment) {
+        this.serviceProvider = serviceProvider;
+        this.username = username;
+        this.rating = rating;
+        this.comment = comment;
+    }
 
-	}
+    public ServiceProvider getServiceProvider() {
+        return serviceProvider;
+    }
 
-	public int getRating(){
-		return rating;
-	}
+    public void setServiceProvider(ServiceProvider serviceProvider) {
+        this.serviceProvider = serviceProvider;
+    }
 
-	public void setRating(int n){
-		this.rating = n;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public String getComment(){
-		return comment;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
+    public float getRating() {
+        return rating;
+    }
 
-	public void setComment(String s){
-		this.comment = s;
-	}
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
 
-} 
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+}

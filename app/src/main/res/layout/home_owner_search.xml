@@ -11,7 +11,6 @@
         android:iconifiedByDefault="false"
         android:queryHint="Search here">
 
-        <requestFocus />
     </SearchView>
 
     <TextView

@@ -91,8 +91,6 @@ public class HomeOwnerSearchFragment extends Fragment {
 
                     @Override
                     public boolean onQueryTextChange(String query) {
-                        System.out.println(query);
-
                         int selectId = searchGroup.getCheckedRadioButtonId();
                         RadioButton selected = (RadioButton) view.findViewById(selectId);
                         final String selectedType = (String) selected.getText();

@@ -9,5 +9,13 @@
             android:id="@+id/nav_search"
             android:icon="@drawable/ic_search"
             android:title="Search" />
+        <item
+            android:id="@+id/nav_bookings"
+            android:icon="@drawable/ic_book"
+            android:title="Bookings" />
+        <item
+            android:id="@+id/nav_ratings"
+            android:icon="@drawable/ic_rate"
+            android:title="Ratings" />
     </group>
 </menu>
