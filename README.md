@@ -1,6 +1,8 @@
 Build Status
+[![CircleCI](https://circleci.com/gh/AaronTeske/GroupProjectSEG.svg?style=svg)](https://circleci.com/gh/AaronTeske/GroupProjectSEG)
 [![Build Status](https://circleci.com/gh/AaronTeske/GroupProjectSEG.png?branch=master)](https://circleci.com/gh/AaronTeske/GroupProjectSEG)
 [![Build Status](https://circleci.com/gh/SEG2105F18/ProductCatalog.png?branch=master)](https://circleci.com/gh/SEG2105F18/ProductCatalog)
+[![CircleCI](https://circleci.com/gh/AaronTeske/GroupProjectSEG.svg?style=svg&circle-token=c296dda29c7fc8b0865a5d5b767c067e6b0c5fe5)](https://circleci.com/gh/AaronTeske/GroupProjectSEG)
 
 # GroupProjectSEG
 This is the git repo for the group project
