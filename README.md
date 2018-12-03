@@ -1,5 +1,6 @@
 Build Status
 [![Build Status](https://circleci.com/gh/AaronTeske/GroupProjectSEG.png?branch=master)](https://circleci.com/gh/AaronTeske/GroupProjectSEG)
+[![Build Status](https://circleci.com/gh/SEG2105F18/ProductCatalog.png?branch=master)](https://circleci.com/gh/SEG2105F18/ProductCatalog)
 
 # GroupProjectSEG
 This is the git repo for the group project
